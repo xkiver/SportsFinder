@@ -29,7 +29,7 @@ import io.realm.RealmResults;
 public class MainActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener,
         GoogleMap.OnMyLocationButtonClickListener,
-        OnMapReadyCallback {
+        OnMapReadyCallback{
 
     private GoogleMap mMap;
 
@@ -77,6 +77,9 @@ public class MainActivity extends AppCompatActivity implements
 
         realm = Realm.getDefaultInstance();
         // ... Do something ...
+        File outFile = this.getDatabasePath("default.realm");
+        String outFileName = outFile.getPath();
+        System.out.println(outFile);
     }
 
 
@@ -93,7 +96,7 @@ public class MainActivity extends AppCompatActivity implements
             mMap.getUiSettings().setMyLocationButtonEnabled(true);
         }
 
-        addMarkersToMap();
+
         savedata();
     }
 
@@ -103,61 +106,60 @@ public class MainActivity extends AppCompatActivity implements
         return false;
     }
 
-    private void savedata() {
-        realm.beginTransaction();
+    private void savedata(){
 
-        // Create an object
-        Place lugar = realm.createObject(Place.class);
+        RealmResults<Place> results = realm.where(Place.class).findAll();
+        for (int i = 0; i < results.size(); i++) {
+            Place u = results.get(i);
 
-        // Set its fields
-        lugar.setName("7x7");
-        lugar.setDescripction("Cancha Baby Futbol");
-        lugar.setImagen("soccer");
-        lugar.setLatt(-33.035753);
-        lugar.setLongi(-71.592886);
+            addMarkersToMap(u.getName().toString(), u.getDescripction().toString(), u.getImagen().toString(),
+                    Double.parseDouble(String.valueOf(u.getLatt())),Double.parseDouble(String.valueOf(u.getLongi())));
 
-        realm.commitTransaction();
-        System.out.println(realm.getPath());
-
-        RealmResults<Place> result2 = realm.where(Place.class)
-                .equalTo("name", "7x7")
-                .findAll();
-        String output = "";
-        for(Place place: result2){
-            output += place.toString();
         }
-        System.out.println(output);
+    }
 
+
+    private void addMarkersToMap(String a, String b, String c, Double d, Double e) {
+
+        LatLng test = new LatLng(d, e);
+        Marker tempo;
+
+        switch (c) {
+            case "soccer":
+                tempo = mMap.addMarker(new MarkerOptions()
+                        .position(test)
+                        .title(a)
+                        .snippet(b)
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.soccer)));
+                break;
+            case "tenis":
+                tempo = mMap.addMarker(new MarkerOptions()
+                        .position(test)
+                        .title(a)
+                        .snippet(b)
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.tenis)));
+                break;
+
+            case "basquetball":
+                tempo = mMap.addMarker(new MarkerOptions()
+                        .position(test)
+                        .title(a)
+                        .snippet(b)
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.basquetball)));
+                break;
+            case "bici":
+                tempo = mMap.addMarker(new MarkerOptions()
+                        .position(test)
+                        .title(a)
+                        .snippet(b)
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.bici)));
+                break;
+        }
 
     }
 
-    private void addMarkersToMap() {
-        // Uses a colored icon.
-        mCanchaUSM = mMap.addMarker(new MarkerOptions()
-                .position(CanchaUSM)
-                .title("7 x 7")
-                .snippet("Cancha de Baby Futbol 7 Jugadores por lado")
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.soccer)));
 
-        mCanchaBas = mMap.addMarker(new MarkerOptions()
-                .position(CanchaBas)
-                .title("Chancha Basketball")
-                .snippet("Cancha de Basketball 5 Jugadores por lado")
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.basquetball)));
 
-        mCanchaFut = mMap.addMarker(new MarkerOptions()
-                .position(CanchaFut)
-                .title("Chancha Futbol")
-                .snippet("Cancha de Futbol, pasto, 11 Jugadores por lado")
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.soccer)));
-
-        mCanchaTennis = mMap.addMarker(new MarkerOptions()
-                .position(CanchaTennis)
-                .title("Chancha Tenis")
-                .snippet("Cancha de Tenis, arcilla")
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.tenis)));
-
-    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
@@ -249,8 +251,7 @@ public class MainActivity extends AppCompatActivity implements
             }
         });
 
-        File outFile = this.getDatabasePath("default.realm");
-        String outFileName = outFile.getPath();
+
 
     }
 
