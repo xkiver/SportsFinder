@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/nav_camera"
+            android:icon="@drawable/soccer"
+            app:actionLayout="@layout/barra_switch"
+            android:title="Futbol" />
+        <item
+            android:id="@+id/nav_gallery"
+            android:icon="@drawable/basquetball"
+            app:actionLayout="@layout/barra_switch"
+            android:title="Basquetbol" />
+        <item
+            android:id="@+id/nav_slideshow"
+            android:icon="@drawable/tenis"
+            app:actionLayout="@layout/barra_switch"
+            android:title="Tenis" />
+        <item
+            android:id="@+id/nav_manage"
+            android:icon="@drawable/bici"
+            app:actionLayout="@layout/barra_switch"
+            android:title="Bicicleta" />
+    </group>
+
+    <item android:title="Contactanos">
+        <menu>
+            <item
+                android:id="@+id/nav_share"
+                android:icon="@drawable/mail"
+                android:title="contacto@sportfinder.cl" />
+
+
+        </menu>
+    </item>
+
+</menu>
