@@ -14,6 +14,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 import cl.telematica.android.sportsfinder.Model.Place;
+
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -22,7 +28,12 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
+import java.util.ArrayList;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -53,6 +64,8 @@ public class MainActivity extends AppCompatActivity implements
 
     private Realm realm;
 
+    private static final String TAG ="Error" ;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +93,8 @@ public class MainActivity extends AppCompatActivity implements
         File outFile = this.getDatabasePath("default.realm");
         String outFileName = outFile.getPath();
         System.out.println(outFile);
+
+        consultaJson();
     }
 
 
@@ -259,6 +274,70 @@ public class MainActivity extends AppCompatActivity implements
     protected void onDestroy() {
         super.onDestroy();
         realm.close();
+    }
+
+
+    public void consultaJson() {
+
+        //Definimos un String con la URL del End-point
+        String url = "http://www.mocky.io/v2/582b54b4280000621953c490";
+
+        //Hacemos uso de Volley para consumir el End-point
+        //myDataset = new ArrayList<Lista>();
+
+
+
+        //Instanciamos un objeto RequestQueue el cual se encarga de gestionar la cola de peticiones
+        RequestQueue queue = Volley.newRequestQueue(this);
+
+        //Armamos una peticion de tipo JSONArray por que es un JsonArray lo que obtendremos como resultado
+        JsonArrayRequest aRequest = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                Log.d(TAG, "onResponse");
+                //Obtenemos un JSONArray como respuesta
+                if (response != null && response.length() > 0) {
+                    //Iteramos con el JSONArray
+                    for (int i = 0; i < response.length(); i++) {
+                        try {
+                            JSONObject p = (JSONObject) response.get(i);
+                            if (p != null) {
+                                //Armamos un objeto Photo con el Title y la URL de cada JSONObject
+                                //Place lugar = new Place();
+
+                                String nombre = p.getString("Nombre");
+                                String descripcion = p.getString("Descripcion");
+                                String imagen = p.getString("imagen");
+                                double latitud = Double.parseDouble(String.valueOf(p.getString("latitud")));
+                                double longitud = Double.parseDouble(String.valueOf(p.getString("longitud")));
+
+
+                                addMarkersToMap(nombre,descripcion,imagen,latitud,longitud);
+                                //System.out.println(nombre);
+                                //System.out.println(descripcion);
+                                //System.out.println(imagen);
+                                //System.out.println(latitud);
+                                //System.out.println(longitud);
+
+
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d(TAG, "onErrorResponse");
+            }
+        });
+
+        //Agregamos la petición de tipo JSON a la cola
+        queue.add(aRequest);
     }
 
 
