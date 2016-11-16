@@ -123,7 +123,12 @@ public class MainActivity extends AppCompatActivity implements
 
     private void savedata(){
 
-        RealmResults<Place> results = realm.where(Place.class).findAll();
+        RealmResults<Place> results = realm.where(Place.class)
+                //.equalTo("imagen", "soccer")
+                //.or()
+                //.equalTo("imagen", "tenis")   FILTRAJE
+                .findAll();
+
         for (int i = 0; i < results.size(); i++) {
             Place u = results.get(i);
 
@@ -243,32 +248,7 @@ public class MainActivity extends AppCompatActivity implements
         return true;
     }
 
-    private void save_data() {
 
-        realm.executeTransactionAsync(new Realm.Transaction() {
-            @Override
-            public void execute(Realm bgRealm) {
-                Place user = bgRealm.createObject(Place.class);
-                user.setName("John");
-                user.setDescripction("john@corporation.com");
-            }
-        }, new Realm.Transaction.OnSuccess() {
-            @Override
-            public void onSuccess() {
-                // Transaction was a success.
-                Log.v("database", "<< stored ok >>");
-            }
-        }, new Realm.Transaction.OnError() {
-            @Override
-            public void onError(Throwable error) {
-                // Transaction failed and was automatically canceled.
-                Log.e("database", error.getMessage());
-            }
-        });
-
-
-
-    }
 
     @Override
     protected void onDestroy() {
@@ -305,12 +285,12 @@ public class MainActivity extends AppCompatActivity implements
                                 //Armamos un objeto Photo con el Title y la URL de cada JSONObject
                                 //Place lugar = new Place();
 
+                                /*
                                 String nombre = p.getString("Nombre");
                                 String descripcion = p.getString("Descripcion");
                                 String imagen = p.getString("imagen");
                                 double latitud = Double.parseDouble(String.valueOf(p.getString("latitud")));
                                 double longitud = Double.parseDouble(String.valueOf(p.getString("longitud")));
-
 
                                 addMarkersToMap(nombre,descripcion,imagen,latitud,longitud);
                                 //System.out.println(nombre);
@@ -318,7 +298,15 @@ public class MainActivity extends AppCompatActivity implements
                                 //System.out.println(imagen);
                                 //System.out.println(latitud);
                                 //System.out.println(longitud);
-
+                              */
+                                realm.beginTransaction();
+                                Place places = realm.createObject(Place.class); // Create a new object
+                                places.setName(p.getString("Nombre"));
+                                places.setDescripction(p.getString("Descripcion"));
+                                places.setImagen(p.getString("imagen"));
+                                places.setLatt(Double.parseDouble(String.valueOf(p.getString("latitud"))));
+                                places.setLongi(Double.parseDouble(String.valueOf(p.getString("longitud"))));
+                                realm.commitTransaction();
 
                             }
                         } catch (JSONException e) {
