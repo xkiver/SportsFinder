@@ -44,24 +44,6 @@ public class MainActivity extends AppCompatActivity implements
 
     private GoogleMap mMap;
 
-    private LatLng CanchaUSM = new LatLng(-33.035753, -71.592886);
-
-    private LatLng CanchaBas = new LatLng(-33.035333, -71.592913);
-
-    private LatLng CanchaFut = new LatLng(-33.034713, -71.594236);
-
-    private LatLng CanchaTennis = new LatLng(-33.035222, -71.596859);
-
-
-
-    private Marker mCanchaUSM;
-
-    private Marker mCanchaBas;
-
-    private Marker mCanchaFut;
-
-    private Marker mCanchaTennis;
-
     private Realm realm;
 
     private static final String TAG ="Error" ;
@@ -89,11 +71,6 @@ public class MainActivity extends AppCompatActivity implements
 
 
         realm = Realm.getDefaultInstance();
-        // ... Do something ...
-        File outFile = this.getDatabasePath("default.realm");
-        String outFileName = outFile.getPath();
-        System.out.println(outFile);
-
         consultaJson();
     }
 
@@ -112,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements
         }
 
 
-        savedata();
+        showdata();
     }
 
     @Override
@@ -121,7 +98,8 @@ public class MainActivity extends AppCompatActivity implements
         return false;
     }
 
-    private void savedata(){
+
+    private void showdata(){
 
         RealmResults<Place> results = realm.where(Place.class)
                 //.equalTo("imagen", "soccer")
@@ -260,12 +238,7 @@ public class MainActivity extends AppCompatActivity implements
     public void consultaJson() {
 
         //Definimos un String con la URL del End-point
-        String url = "http://www.mocky.io/v2/582b54b4280000621953c490";
-
-        //Hacemos uso de Volley para consumir el End-point
-        //myDataset = new ArrayList<Lista>();
-
-
+        String url = "http://www.mocky.io/v2/5845b7fd110000c412f3ca0e";
 
         //Instanciamos un objeto RequestQueue el cual se encarga de gestionar la cola de peticiones
         RequestQueue queue = Volley.newRequestQueue(this);
@@ -282,23 +255,7 @@ public class MainActivity extends AppCompatActivity implements
                         try {
                             JSONObject p = (JSONObject) response.get(i);
                             if (p != null) {
-                                //Armamos un objeto Photo con el Title y la URL de cada JSONObject
-                                //Place lugar = new Place();
 
-                                /*
-                                String nombre = p.getString("Nombre");
-                                String descripcion = p.getString("Descripcion");
-                                String imagen = p.getString("imagen");
-                                double latitud = Double.parseDouble(String.valueOf(p.getString("latitud")));
-                                double longitud = Double.parseDouble(String.valueOf(p.getString("longitud")));
-
-                                addMarkersToMap(nombre,descripcion,imagen,latitud,longitud);
-                                //System.out.println(nombre);
-                                //System.out.println(descripcion);
-                                //System.out.println(imagen);
-                                //System.out.println(latitud);
-                                //System.out.println(longitud);
-                              */
                                 realm.beginTransaction();
                                 Place places = realm.createObject(Place.class); // Create a new object
                                 places.setName(p.getString("Nombre"));

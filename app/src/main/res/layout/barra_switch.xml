@@ -11,6 +11,6 @@
         android:layout_height="wrap_content"
         android:contextClickable="true"
         android:enabled="true"
-        android:scrollbarSize="5dp" />
+        android:scrollbarSize="2dp" />
 
 </RelativeLayout>
