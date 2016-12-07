@@ -40,6 +40,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 import io.realm.Realm;
+import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
 public class MainActivity extends AppCompatActivity implements
         GoogleMap.OnMyLocationButtonClickListener,
@@ -68,7 +69,12 @@ public class MainActivity extends AppCompatActivity implements
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        realm = Realm.getDefaultInstance();
+        realm.init(this);
+        RealmConfiguration config2 = new RealmConfiguration.Builder()
+                .name("FirstDB.realm")
+                .deleteRealmIfMigrationNeeded()
+                .build();
+        realm = Realm.getInstance(config2);
         mFutbolCheckbox = (CheckBox) findViewById(R.id.futbol);
         mBasquetballCheckbox = (CheckBox) findViewById(R.id.basket);
         mTennisCheckbox = (CheckBox) findViewById(R.id.tennis);
@@ -267,7 +273,9 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onInfoWindowClick(Marker marker) {
         Toast.makeText(this, "Ver + !", Toast.LENGTH_SHORT).show();
+        String descrip = marker.getSnippet();
         Intent i = new Intent(MainActivity.this,InfoActivity.class);
+        i.putExtra("description", descrip);
         startActivity(i);
     }
 
