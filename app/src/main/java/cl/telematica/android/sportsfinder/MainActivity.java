@@ -1,5 +1,6 @@
 package cl.telematica.android.sportsfinder;
 
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
@@ -12,6 +13,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.CheckBox;
 import android.widget.Toast;
 import cl.telematica.android.sportsfinder.Model.Place;
 
@@ -38,15 +42,22 @@ import java.util.ArrayList;
 import io.realm.Realm;
 import io.realm.RealmResults;
 public class MainActivity extends AppCompatActivity implements
-        NavigationView.OnNavigationItemSelectedListener,
         GoogleMap.OnMyLocationButtonClickListener,
-        OnMapReadyCallback{
+        OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener{
 
     private GoogleMap mMap;
 
     private Realm realm;
 
     private static final String TAG ="Error" ;
+
+    private CheckBox mFutbolCheckbox;
+
+    private CheckBox mBasquetballCheckbox;
+
+    private CheckBox mTennisCheckbox;
+
+    private CheckBox mBicicletaCheckbox;
 
 
     @Override
@@ -58,22 +69,117 @@ public class MainActivity extends AppCompatActivity implements
         //
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-        //
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-        navigationView.setItemIconTintList(null);
-
 
         realm = Realm.getDefaultInstance();
+        mFutbolCheckbox = (CheckBox) findViewById(R.id.traffic);
+        mBasquetballCheckbox = (CheckBox) findViewById(R.id.my_location);
+        mTennisCheckbox = (CheckBox) findViewById(R.id.buildings);
+        mBicicletaCheckbox = (CheckBox) findViewById(R.id.indoor);
         consultaJson();
     }
 
+    private boolean checkReady() {
+        if (mMap == null) {
+            Toast.makeText(this, R.string.map_not_ready, Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
+    }
+
+    public void onClearMap(View view) {
+        if (!checkReady()) {
+            return;
+        }
+        mMap.clear();
+        mFutbolCheckbox.setChecked(false);
+        mBasquetballCheckbox.setChecked(false);
+        mTennisCheckbox.setChecked(false);
+        mBicicletaCheckbox.setChecked(false);
+    }
+
+    public void onFutbolToggled(View view) {
+        updateFutbol();
+    }
+    private void updateFutbol() {
+        if (!checkReady()) {
+            return;
+        }
+        mFutbolCheckbox.isChecked();
+        RealmResults<Place> results1 = realm.where(Place.class)
+                .equalTo("imagen", "soccer")
+                .findAll();
+
+        for (int i = 0; i < results1.size(); i++) {
+            Place u = results1.get(i);
+
+            addMarkersToMap(u.getName().toString(), u.getDescripction().toString(), u.getImagen().toString(),
+                    Double.parseDouble(String.valueOf(u.getLatt())), Double.parseDouble(String.valueOf(u.getLongi())));
+
+        }
+    }
+
+    public void onBasquetballToggled(View view) {
+        updateBasquetball();
+    }
+    private void updateBasquetball() {
+        if (!checkReady()) {
+            return;
+        }
+        mFutbolCheckbox.isChecked();
+        RealmResults<Place> results2 = realm.where(Place.class)
+                .equalTo("imagen", "basquetball")
+                .findAll();
+
+        for (int i = 0; i < results2.size(); i++) {
+            Place u = results2.get(i);
+
+            addMarkersToMap(u.getName().toString(), u.getDescripction().toString(), u.getImagen().toString(),
+                    Double.parseDouble(String.valueOf(u.getLatt())), Double.parseDouble(String.valueOf(u.getLongi())));
+
+        }
+    }
+
+    public void onTennisToggled(View view) {
+        updateTennis();
+    }
+    private void updateTennis() {
+        if (!checkReady()) {
+            return;
+        }
+        mFutbolCheckbox.isChecked();
+        RealmResults<Place> results3 = realm.where(Place.class)
+                .equalTo("imagen", "tenis")
+                .findAll();
+
+        for (int i = 0; i < results3.size(); i++) {
+            Place u = results3.get(i);
+
+            addMarkersToMap(u.getName().toString(), u.getDescripction().toString(), u.getImagen().toString(),
+                    Double.parseDouble(String.valueOf(u.getLatt())), Double.parseDouble(String.valueOf(u.getLongi())));
+
+        }
+    }
+
+    public void onBicicletaToggled(View view) {
+        updateBicicleta();
+    }
+    private void updateBicicleta() {
+        if (!checkReady()) {
+            return;
+        }
+        mFutbolCheckbox.isChecked();
+        RealmResults<Place> results4 = realm.where(Place.class)
+                .equalTo("imagen", "bici")
+                .findAll();
+
+        for (int i = 0; i < results4.size(); i++) {
+            Place u = results4.get(i);
+
+            addMarkersToMap(u.getName().toString(), u.getDescripction().toString(), u.getImagen().toString(),
+                    Double.parseDouble(String.valueOf(u.getLatt())), Double.parseDouble(String.valueOf(u.getLongi())));
+
+        }
+    }
 
     @Override
     public void onMapReady(GoogleMap map) {
@@ -81,20 +187,25 @@ public class MainActivity extends AppCompatActivity implements
         mMap.setOnMyLocationButtonClickListener(this);
         mMap.getUiSettings().setZoomControlsEnabled(true);
 
+
         if (ActivityCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
         } else {
             mMap.setMyLocationEnabled(true);
             mMap.getUiSettings().setMyLocationButtonEnabled(true);
         }
+        mMap.setOnInfoWindowClickListener(this);
 
-
-        showdata();
+        //showdata();
+        updateFutbol();
+        updateBasquetball();
+        updateTennis();
+        updateBicicleta();
     }
 
     @Override
     public boolean onMyLocationButtonClick() {
-        Toast.makeText(this, "Buscando Localización", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Localizandote!", Toast.LENGTH_SHORT).show();
         return false;
     }
 
@@ -175,16 +286,6 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
@@ -199,33 +300,12 @@ public class MainActivity extends AppCompatActivity implements
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.nav_camera) {
-
-        }
-        else if (id == R.id.nav_gallery) {
-
-        }
-        else if (id == R.id.nav_slideshow) {
-
-        }
-        else if (id == R.id.nav_manage) {
-
-        }
-        else if (id == R.id.nav_share) {
-
-        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
+    public void onInfoWindowClick(Marker marker) {
+        Toast.makeText(this, "Info Window click", Toast.LENGTH_SHORT).show();
+        //Intent i = new Intent(MainActivity.this,InfoActivity.class);
+        //startActivity(i);
     }
-
 
 
     @Override
@@ -238,7 +318,7 @@ public class MainActivity extends AppCompatActivity implements
     public void consultaJson() {
 
         //Definimos un String con la URL del End-point
-        String url = "http://www.mocky.io/v2/5845b7fd110000c412f3ca0e";
+        String url = "http://www.mocky.io/v2/58470cfb3f0000380efe694e";
 
         //Instanciamos un objeto RequestQueue el cual se encarga de gestionar la cola de peticiones
         RequestQueue queue = Volley.newRequestQueue(this);

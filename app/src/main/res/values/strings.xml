@@ -3,6 +3,11 @@
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-
     <string name="action_settings">Settings</string>
+    <string name="Futbol">Futbol</string>
+    <string name="Basquetball">Basquetball</string>
+    <string name="Tennis">Tennis</string>
+    <string name="Clear">Clear</string>
+    <string name="Bicicleta">Bicicleta</string>
+    <string name="map_not_ready">Map is not ready yet</string>
 </resources>
