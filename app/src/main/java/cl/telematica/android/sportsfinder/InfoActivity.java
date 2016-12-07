@@ -9,8 +9,8 @@ import android.widget.TextView;
  */
 
 public class InfoActivity extends MainActivity{
-    TextView info;
 
+    TextView info;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
