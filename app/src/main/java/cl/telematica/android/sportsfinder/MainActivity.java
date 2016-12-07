@@ -69,10 +69,10 @@ public class MainActivity extends AppCompatActivity implements
         mapFragment.getMapAsync(this);
 
         realm = Realm.getDefaultInstance();
-        mFutbolCheckbox = (CheckBox) findViewById(R.id.traffic);
-        mBasquetballCheckbox = (CheckBox) findViewById(R.id.my_location);
-        mTennisCheckbox = (CheckBox) findViewById(R.id.buildings);
-        mBicicletaCheckbox = (CheckBox) findViewById(R.id.indoor);
+        mFutbolCheckbox = (CheckBox) findViewById(R.id.futbol);
+        mBasquetballCheckbox = (CheckBox) findViewById(R.id.basket);
+        mTennisCheckbox = (CheckBox) findViewById(R.id.tennis);
+        mBicicletaCheckbox = (CheckBox) findViewById(R.id.bicicleta);
         consultaJson();
     }
 
@@ -194,7 +194,6 @@ public class MainActivity extends AppCompatActivity implements
         }
         mMap.setOnInfoWindowClickListener(this);
 
-        //showdata();
         updateFutbol();
         updateBasquetball();
         updateTennis();
@@ -205,24 +204,6 @@ public class MainActivity extends AppCompatActivity implements
     public boolean onMyLocationButtonClick() {
         Toast.makeText(this, "Localizandote!", Toast.LENGTH_SHORT).show();
         return false;
-    }
-
-
-    private void showdata(){
-
-        RealmResults<Place> results = realm.where(Place.class)
-                //.equalTo("imagen", "soccer")
-                //.or()
-                //.equalTo("imagen", "tenis")   FILTRAJE
-                .findAll();
-
-        for (int i = 0; i < results.size(); i++) {
-            Place u = results.get(i);
-
-            addMarkersToMap(u.getName().toString(), u.getDescripction().toString(), u.getImagen().toString(),
-                    Double.parseDouble(String.valueOf(u.getLatt())),Double.parseDouble(String.valueOf(u.getLongi())));
-
-        }
     }
 
 
@@ -284,18 +265,10 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        int id = item.getItemId();
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
     public void onInfoWindowClick(Marker marker) {
-        Toast.makeText(this, "Info Window click", Toast.LENGTH_SHORT).show();
-        //Intent i = new Intent(MainActivity.this,InfoActivity.class);
-        //startActivity(i);
+        Toast.makeText(this, "Ver + !", Toast.LENGTH_SHORT).show();
+        Intent i = new Intent(MainActivity.this,InfoActivity.class);
+        startActivity(i);
     }
 
 
@@ -309,7 +282,7 @@ public class MainActivity extends AppCompatActivity implements
     public void consultaJson() {
 
         //Definimos un String con la URL del End-point
-        String url = "http://www.mocky.io/v2/58470cfb3f0000380efe694e";
+        String url = "http://www.mocky.io/v2/5847f0993f0000c22ffe6a71";
 
         //Instanciamos un objeto RequestQueue el cual se encarga de gestionar la cola de peticiones
         RequestQueue queue = Volley.newRequestQueue(this);

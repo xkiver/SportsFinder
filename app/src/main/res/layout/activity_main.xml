@@ -36,21 +36,23 @@ android:layout_height="match_parent">
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="0.5"
-            android:drawableLeft="@mipmap/trash"
+            android:drawableLeft="@mipmap/basurero"
+            android:drawablePadding="8dp"
             android:onClick="onClearMap"
             android:text="@string/Clear"
-            android:background="@color/colorPrimary" />
+            android:background="@color/colorPrimary"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"/>
 
         <CheckBox
-            android:id="@+id/traffic"
+            android:id="@+id/futbol"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="onFutbolToggled"
             android:text="@string/Futbol" />
 
         <CheckBox
-            android:id="@+id/my_location"
+            android:id="@+id/basket"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checked="false"
@@ -58,7 +60,7 @@ android:layout_height="match_parent">
             android:text="@string/Basquetball" />
 
         <CheckBox
-            android:id="@+id/buildings"
+            android:id="@+id/tennis"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="onTennisToggled"
@@ -66,7 +68,7 @@ android:layout_height="match_parent">
             android:text="@string/Tennis" />
 
         <CheckBox
-            android:id="@+id/indoor"
+            android:id="@+id/bicicleta"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="onBicicletaToggled"
