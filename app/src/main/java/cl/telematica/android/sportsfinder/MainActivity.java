@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements
 
         realm.init(this);
         RealmConfiguration config2 = new RealmConfiguration.Builder()
-                .name("FirstDB.realm")
+                .name("database.realm")
                 .deleteRealmIfMigrationNeeded()
                 .build();
         realm = Realm.getInstance(config2);
@@ -290,7 +290,7 @@ public class MainActivity extends AppCompatActivity implements
     public void consultaJson() {
 
         //Definimos un String con la URL del End-point
-        String url = "http://www.mocky.io/v2/5847f0993f0000c22ffe6a71";
+        String url = "http://www.mocky.io/v2/58483e4310000029054e2f59";
 
         //Instanciamos un objeto RequestQueue el cual se encarga de gestionar la cola de peticiones
         RequestQueue queue = Volley.newRequestQueue(this);
