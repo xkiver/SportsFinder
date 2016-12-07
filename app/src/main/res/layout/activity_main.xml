@@ -37,8 +37,10 @@ android:layout_height="match_parent">
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
+            android:drawableLeft="@mipmap/trash"
             android:onClick="onClearMap"
-            android:text="@string/Clear" />
+            android:text="@string/Clear"
+            android:background="@color/colorPrimary" />
 
         <CheckBox
             android:id="@+id/traffic"

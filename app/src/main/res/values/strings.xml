@@ -7,7 +7,7 @@
     <string name="Futbol">Futbol</string>
     <string name="Basquetball">Basquetball</string>
     <string name="Tennis">Tennis</string>
-    <string name="Clear">Clear</string>
+    <string name="Clear">Limpiar Mapa</string>
     <string name="Bicicleta">Bicicleta</string>
     <string name="map_not_ready">Map is not ready yet</string>
 </resources>
